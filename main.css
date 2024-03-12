@@ -1,0 +1,36 @@
+body, html {
+  height: 100%;
+  margin: 0;
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.main-content {
+  flex-grow: 0.5; /* Allow this element to grow and fill available space */
+  display: flex;
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+  flex-direction: column;
+  text-align: center;
+  padding: 2rem 0; /* Optional padding */
+}
+
+.main-image {
+  position: absolute;
+  bottom: 0; /* Align to the bottom */
+  width: 100%;
+  height: auto;
+  max-width: 800px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.btn-launch {
+  font-size: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  text-transform: none;
+}
