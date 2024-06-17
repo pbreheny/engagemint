@@ -1,0 +1,10 @@
+.DS_Store
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+man/
+NAMESPACE
+app/img
+app/rds
+server
