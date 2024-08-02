@@ -18,7 +18,7 @@ for (i in seq_along(f)) {
   
   # Merge
   dat_list[[i]] <- merge(snp, eqtl, by='id') %>%
-    .[, .(V1, variant_id, tissue=tissue[i], gene_id = str_split_i(gene_id, '\\.', 1), tss_distance)]
+    .[, .(rsid=V1, variant_id, tissue=tissue[i], gene_id = str_split_i(gene_id, '\\.', 1), tss_distance, slope=slope, pval=pval_nominal)]
   setTxtProgressBar(pb, i)
 }
 close(pb)
@@ -32,6 +32,9 @@ anno <- select(orgdb, keys=unique(dat$gene_id), columns=c("SYMBOL", "GENENAME"),
   .[!duplicated(ENSEMBL)] %>%
   .[, .(gene_id=ENSEMBL, symbol=SYMBOL, name=GENENAME)]
 out <- merge(dat, anno, by='gene_id') %>%
-  .[, .(rsid=V1, variant_id, tissue, gene_id, tss_distance, symbol, name)]
+  .[, .(rsid, variant_id, tissue, gene_id, tss_distance, symbol, name, slope, pval)]
 setkey(out, 'variant_id')
 fwrite(out, '~/tmp/snp-eqtl.txt', sep='\t')
+
+# Upload
+system('cloud-share ~/tmp/snp-eqtl.txt')
