@@ -1,17 +1,16 @@
 #' Read in eCLIP data
 devtools::load_all(quiet=TRUE)
 
-bedpaths <- list.files(data_loc + "bed12", full.names = TRUE, pattern = '*.bed')
-bedfiles <- list()
-for(i in 1:length(bedpaths)) bedfiles[[i]] <- fread(bedpaths[i])
-names(bedfiles) <- gsub(".*\\/", "", bedpaths)
+eclipfile <- read.table(data_loc + "format_All_targetsite_final.bed", header = TRUE)
 
-# Process eclip
 process_ec <- function(x) {
-  select(x, c(Chromosome = V1, Strand = V6, `Gene Symbol` = V4, 
-              `-Log10 P Value` = V5, `Window Start` = V2, `Window End` = V3)) %>%
-    mutate(`-Log10 P Value` = ifelse(`-Log10 P Value` > 100, 
-                                     100.00, round(`-Log10 P Value`, 2)))
+  mutate(x, Tissue = as.factor(Tissue)) %>%
+    mutate(Strand = as.factor(Strand)) %>%
+    mutate(`Min -Log10 P Value` = ifelse(`MinPval.Log10.` > 100, 
+                                         100.00, `MinPval.Log10.`)) %>%
+    relocate(`Min -Log10 P Value`, .after = Cluster_Coord) %>%
+    select(-`MinPval.Log10.`)
 }
-lapply(bedfiles, process_ec) %>%
+
+process_ec(eclipfile) %>%
   saveRDS('rds/eclip.rds')
