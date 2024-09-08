@@ -1,6 +1,4 @@
-library(dplyr)
 library(DT)
-library(magrittr)
 library(shiny)
 library(shinyjs)
 library(shinyWidgets)
@@ -8,29 +6,6 @@ library(shinyWidgets)
 # Setup
 hits_clip <- readRDS('rds/hits-clip.rds')
 e_clip <- readRDS('rds/eclip.rds')
-
-# function to render DT
-DTrender <- function(x) {
-  renderDT(
-    datatable(x,
-              rownames = FALSE,
-              filter = "top",
-              escape = TRUE
-    )
-  )
-}
-
-# function to create download button
-DLbutton <- function(table, filepath) {
-  downloadHandler(
-    filename = filepath,
-    content = function(file) {
-      write.csv(table,
-                file,
-                quote = FALSE, row.names = FALSE)
-    }
-  )
-}
 
 # ui -----
 
@@ -59,16 +34,43 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   
   # Table of eCLIP miRNAs
-  output$eCLIPtable <- DTrender(e_clip)
+  output$eCLIPtable <- renderDT(
+    datatable(e_clip,
+              rownames = FALSE,
+              filter = "top",
+              escape = FALSE
+    )
+  )
   
   # eCLIP download button
-  output$eCLIPdownload <- DLbutton(eCLIPtable, "eCLIPtable.csv")
+  output$eCLIPdownload <- downloadHandler(
+    filename = "eCLIPtable.csv",
+    content = function(file) {
+      write.csv(e_clip,
+                file,
+                quote = FALSE, row.names = FALSE)
+    }
+  )
   
   # Table of HITS-CLIP miRNAs
-  output$HITSCLIPtable <- DTrender(hits_clip)
+  output$HITSCLIPtable <- renderDT(
+    datatable(hits_clip[,!(colnames(hits_clip) %in% "Genomic Coordinates (Hg19)")],
+              rownames = FALSE,
+              filter = "top",
+              escape = FALSE
+    )
+  )
   
   # HITS-CLIP download button
-  output$HITSCLIPdownload <- DLbutton(HITSCLIPtable, "HITSCLIPtable.csv")
+  output$HITSCLIPdownload <- downloadHandler(
+    filename = "HITSCLIPtable.csv",
+    content = function(file) {
+      write.csv(hits_clip[,!(colnames(hits_clip) %in% "Genomic Coordinates Link (Hg19)")],
+                file,
+                quote = FALSE, row.names = FALSE)
+    }
+  )
+  
 }
 
 shinyApp(ui = ui, server = server)
