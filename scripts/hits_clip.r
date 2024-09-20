@@ -33,4 +33,4 @@ process_hc <- function(x) {
 }
 
 process_hc(hitsfile) %>%
-  saveRDS('rds/hits-clip.rds')
+  saveRDS('app/rds/hits-clip.rds')

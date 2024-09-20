@@ -13,4 +13,4 @@ process_ec <- function(x) {
 }
 
 process_ec(eclipfile) %>%
-  saveRDS('rds/eclip.rds')
+  saveRDS('app/rds/eclip.rds')
