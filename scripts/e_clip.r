@@ -12,5 +12,6 @@ process_ec <- function(x) {
     select(-`MinPval.Log10.`)
 }
 
+if (!dir.exists('app/rds')) dir.create('app/rds')
 process_ec(eclipfile) %>%
   saveRDS('app/rds/eclip.rds')

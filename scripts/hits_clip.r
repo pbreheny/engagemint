@@ -32,5 +32,6 @@ process_hc <- function(x) {
   do.call(rbind, temp)
 }
 
+if (!dir.exists('app/rds')) dir.create('app/rds')
 process_hc(hitsfile) %>%
   saveRDS('app/rds/hits-clip.rds')
