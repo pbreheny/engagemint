@@ -3,7 +3,7 @@
 devtools::load_all(quiet=TRUE)
 
 # Read in snps
-snp <- fread(data_loc + 'snps.txt')
+snp <- fread(data_loc + 'new-snps.txt')
 snp$id <- glue_data(snp, 'chr{V2}_{V3}')
 
 # Loop over eQTLs

@@ -7,7 +7,7 @@ library(SNPlocs.Hsapiens.dbSNP155.GRCh38) |> suppressPackageStartupMessages()
 library(XtraSNPlocs.Hsapiens.dbSNP144.GRCh38) |> suppressPackageStartupMessages()
 
 # Read SNPs
-rsid <- readxl::read_excel(data_loc + 'eclip SNPs for Breheny.xlsx', col_names = 'v1')$v1
+rsid <- readxl::read_excel(data_loc + 'New eCLIP SNPs Oct 2024.xlsx', col_names = 'v1')$v1
 
 # Map SNPs
 gr_snp <- snpsById(SNPlocs.Hsapiens.dbSNP155.GRCh38, rsid, ifnotfound='drop')
@@ -27,8 +27,11 @@ out_ind <- data.table(
 
 # Merge and save
 out <- rbind(out_snp, out_ind)
-fwrite(out, glue('{data_loc}/snps.txt'), sep='\t', col.names=FALSE)
+fwrite(out, glue('{data_loc}/new-snps.txt'), sep='\t', col.names=FALSE)
 
 # Missing SNPs
+miss <- setdiff(rsid, out$V1) 
+pct <- 100*length(miss)/nrow(out)
+glue('{length(miss)} missing / {nrow(out)} total ({breheny::.f(pct, 1)} %) ')
+head(miss)
 out
-setdiff(rsid, out$V1) 
